@@ -310,7 +310,7 @@ const FrameDimensions = ({ settings }: { settings: FrameSettings }) => {
 
     return (
         <div className="flex flex-col gap-2">
-            <p className="text-smallPlus text-foreground-primary">Frame Dimensions</p>
+            <p className="text-smallPlus text-foreground-primary">Window Dimensions</p>
             <div className="flex flex-row justify-between items-center">
                 <span className="text-xs text-foreground-secondary">Device</span>
                 <Select value={device} onValueChange={setDevice}>

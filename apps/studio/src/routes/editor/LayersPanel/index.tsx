@@ -3,7 +3,7 @@ import { EditorMode } from '@/lib/models';
 import { Icons } from '@onlook/ui/icons';
 import { cn } from '@onlook/ui/utils';
 import { observer } from 'mobx-react-lite';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ComponentsTab from './ComponentsTab';
 import { HelpDropdown } from './HelpDropdown.tsx';
 import ImagesTab from './ImageTab.tsx';
@@ -11,6 +11,9 @@ import LayersTab from './LayersTab';
 import PagesTab from './PageTab';
 import ZoomControls from './ZoomControls/index.tsx';
 import OpenCodeMini from './OpenCodeMini/index.tsx';
+import WindowSettings from './WindowSettings';
+import type { FrameSettings } from '@onlook/models';
+import { motion } from 'framer-motion';
 const COMPONENT_DISCOVERY_ENABLED = false;
 
 const LayersPanel = observer(() => {
@@ -20,10 +23,18 @@ const LayersPanel = observer(() => {
         LAYERS = 'layers',
         COMPONENTS = 'components',
         IMAGES = 'images',
+        WINDOW = 'window',
     }
     const [selectedTab, setSelectedTab] = useState<TabValue>(TabValue.LAYERS);
     const [isContentPanelOpen, setIsContentPanelOpen] = useState(false);
     const [isLocked, setIsLocked] = useState(false);
+    const [frameSettings, setFrameSettings] = useState<FrameSettings>();
+
+    useEffect(() => {
+        if (editorEngine.isWindowSelected) {
+            setFrameSettings(editorEngine.canvas.getFrame(editorEngine.webviews.selected[0].id));
+        }
+    }, [editorEngine.isWindowSelected]);
 
     const handleMouseEnter = (tab: TabValue) => {
         if (isLocked) {
@@ -126,6 +137,34 @@ const LayersPanel = observer(() => {
 
                 <button
                     className={cn(
+                        'w-16 h-16 rounded-xl flex flex-col items-center justify-center gap-1.5 p-2',
+                        selectedTab === TabValue.WINDOW && isLocked
+                            ? 'bg-accent text-foreground border-[0.5px] border-foreground/20'
+                            : 'text-muted-foreground hover:text-foreground',
+                    )}
+                    onClick={() => handleClick(TabValue.WINDOW)}
+                    onMouseEnter={() => handleMouseEnter(TabValue.WINDOW)}
+                >
+                    <Icons.Desktop className="w-5 h-5" />
+                    <span className="text-xs leading-tight">Window</span>
+                </button>
+
+                <button
+                    className={cn(
+                        'w-16 h-16 rounded-xl flex flex-col items-center justify-center gap-1.5 p-2 hidden',
+                        selectedTab === TabValue.COMPONENTS && isLocked
+                            ? 'bg-accent text-foreground border-[0.5px] border-foreground/20'
+                            : 'text-muted-foreground hover:text-foreground hover:bg-accent/50',
+                    )}
+                    onClick={() => handleClick(TabValue.COMPONENTS)}
+                    onMouseEnter={() => handleMouseEnter(TabValue.COMPONENTS)}
+                >
+                    <Icons.Component className="w-5 h-5" />
+                    <span className="text-xs leading-tight">Elements</span>
+                </button>
+
+                <button
+                    className={cn(
                         'w-16 h-16 rounded-xl flex flex-col items-center justify-center gap-1.5 p-2 hidden',
                         selectedTab === TabValue.COMPONENTS && isLocked
                             ? 'bg-accent text-foreground border-[0.5px] border-foreground/20'
@@ -166,6 +205,31 @@ const LayersPanel = observer(() => {
                                 ))}
                             {selectedTab === TabValue.PAGES && <PagesTab />}
                             {selectedTab === TabValue.IMAGES && <ImagesTab />}
+                            {selectedTab === TabValue.WINDOW && editorEngine.isWindowSelected && frameSettings && (
+                                <WindowSettings 
+                                    setIsOpen={setIsContentPanelOpen} 
+                                    settings={frameSettings} 
+                                />
+                            )}
+                            {selectedTab === TabValue.WINDOW && !editorEngine.isWindowSelected && (
+                                <motion.div
+                                    key="empty-state"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    transition={{ duration: 0.15 }}
+                                    className="flex flex-col w-[248px] min-w-[248px] h-full"
+                                >
+                                    <div className="flex-1 flex flex-col items-center justify-center text-foreground-tertiary/80">
+                                        <div className="w-32 h-32">
+                                            <Icons.EmptyState className="w-full h-full" />
+                                        </div>
+                                        <p className="text-center text-regularPlus text-balance max-w-[300px]">
+                                            Select a Window <br /> to edit its settings
+                                        </p>
+                                    </div>
+                                </motion.div>
+                            )}
                         </div>
                     </div>
                     {/* Invisible padding area that maintains hover state */}

@@ -16,26 +16,12 @@ const WindowSettings = ({
     const editorEngine = useEditorEngine();
 
     return (
-        <div className="flex flex-col">
-            <div className="rounded-lg p-1 text-muted-foreground bg-transparent w-full gap-2 select-none justify-between items-center h-full px-2">
-                <div className="flex flex-row items-center gap-2">
-                    <button
-                        className="text-default rounded-lg p-2 bg-transparent hover:text-foreground-hover"
-                        onClick={() => setIsOpen(false)}
-                    >
-                        <Icons.PinRight />
-                    </button>
-                    <div className="bg-transparent py-2 px-1 text-xs text-foreground-primary">
-                        Window
-                    </div>
-                </div>
-            </div>
-            <Separator />
-            <div className="flex flex-col gap-3 px-3 py-2">
+        <div className="flex flex-col w-[248px] min-w-[248px] h-full">
+            <div className="flex flex-col gap-3 px-0.5 py-0.5">
                 <div className="flex flex-row gap-1">
                     <Button
                         variant={'outline'}
-                        className="h-fit py-1.5 px-2.5 text-foreground-tertiary w-full items-center"
+                        className="h-fit py-2 px-2.5 text-foreground-tertiary w-full items-center"
                         onClick={() => editorEngine.duplicateWindow(settings.id)}
                     >
                         <Icons.Copy className="mr-2" />
@@ -43,7 +29,7 @@ const WindowSettings = ({
                     </Button>
                     <Button
                         variant={'outline'}
-                        className="h-fit py-1.5 px-2.5 text-foreground-tertiary w-full items-center"
+                        className="h-fit py-2 px-2.5 text-foreground-tertiary w-full items-center"
                         disabled={!editorEngine.canDeleteWindow()}
                         onClick={() => editorEngine.deleteWindow(settings.id)}
                     >
@@ -51,7 +37,7 @@ const WindowSettings = ({
                         <span className="text-xs">Delete</span>
                     </Button>
                 </div>
-
+                <Separator />
                 <FrameDimensions settings={settings} />
                 <Separator />
                 <DeviceSettings settings={settings} />
