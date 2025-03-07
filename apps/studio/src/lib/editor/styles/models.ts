@@ -29,6 +29,7 @@ export enum StyleType {
     Text = 'text',
     Dimensions = 'dimensions',
     Number = 'number',
+    NumberStepper = 'numberStepper',
     Select = 'select',
     Color = 'color',
     Image = 'image',

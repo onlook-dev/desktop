@@ -40,7 +40,7 @@ export const PositionGroup = [
     new CompoundStyleImpl(
         CompoundStyleKey.Position,
         new SingleStyleImpl('position', 'relative', 'Position', StyleType.Select, {
-            options: ['relative', 'absolute', 'fixed', 'static'],
+            options: ['relative', 'absolute', 'fixed', 'static', 'sticky'],
         }),
         [
             new SingleStyleImpl('top', '', 'Top', StyleType.Number, {
@@ -176,6 +176,7 @@ export const StyleGroup = [
         min: 0,
         max: 100,
     }),
+
     new CompoundStyleImpl(
         CompoundStyleKey.Fill,
         new SingleStyleImpl('backgroundColor', '', 'Background', StyleType.Color),
@@ -192,6 +193,16 @@ export const StyleGroup = [
             }),
         ],
     ),
+
+    new SingleStyleImpl('overflow', 'visible', 'Overflow', StyleType.Select, {
+        options: ['visible', 'hidden', 'clip', 'scroll', 'auto'],
+    }),
+
+    new SingleStyleImpl('zIndex', '', 'Z-Index', StyleType.NumberStepper, {
+        min: -9999,
+        max: 9999,
+    }),
+
     new CompoundStyleImpl(
         CompoundStyleKey.Corners,
         new SingleStyleImpl('borderRadius', '', 'Corners', StyleType.Number, {
@@ -225,6 +236,7 @@ export const StyleGroup = [
             }),
         ],
     ),
+
     new CompoundStyleImpl(
         CompoundStyleKey.Border,
         new SingleStyleImpl('borderColor', '', 'Border', StyleType.Color),

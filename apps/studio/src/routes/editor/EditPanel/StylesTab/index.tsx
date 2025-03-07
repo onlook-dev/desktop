@@ -28,6 +28,7 @@ import SelectInput from './single/SelectInput';
 import TagDetails from './single/TagDetails';
 import TailwindInput from './single/TailwindInput';
 import TextInput from './single/TextInput';
+import NumberStepperInput from './single/NumberStepperInput';
 
 const STYLE_GROUP_MAPPING: Record<StyleGroupKey, BaseStyle[]> = {
     [StyleGroupKey.Position]: PositionGroup,
@@ -45,6 +46,8 @@ const SingleInput = memo(({ style }: { style: SingleStyle }) => {
         return <ColorInput elementStyle={style} />;
     } else if (style.type === StyleType.Number) {
         return <NumberUnitInput elementStyle={style} />;
+    } else if (style.type === StyleType.NumberStepper) {
+        return <NumberStepperInput elementStyle={style} />;
     } else if (style.type === StyleType.Text) {
         return <TextInput elementStyle={style} />;
     }

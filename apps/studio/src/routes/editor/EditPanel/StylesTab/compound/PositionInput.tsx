@@ -7,6 +7,7 @@ import { cn } from '@onlook/ui/utils';
 import SelectInput from '../single/SelectInput';
 import { Icons } from '@onlook/ui/icons/index';
 import type { DomElement } from '@onlook/models/element';
+import NumberUnitInput from '../single/NumberUnitInput';
 
 type Position = 'top' | 'bottom' | 'left' | 'right';
 type PositionState = Record<Position, boolean>;
@@ -103,6 +104,25 @@ const PositionInput = observer(({ compoundStyle }: { compoundStyle: CompoundStyl
             editorEngine.history.commitTransaction();
 
             centerElement();
+        } else if (value === 'sticky') {
+            editorEngine.style.update('position', value);
+            editorEngine.history.commitTransaction();
+
+            // For sticky position, we only need the top value
+            // Reset all position values to auto first
+            const updates = Object.fromEntries(
+                compoundStyle.children.map((elementStyle) => [elementStyle.key, 'auto']),
+            );
+
+            // Set top to 0px by default
+            const topStyle = compoundStyle.children.find(
+                (style) => style.key.toLowerCase() === 'top',
+            );
+            if (topStyle) {
+                updates[topStyle.key] = '0px';
+            }
+
+            editorEngine.style.updateMultiple(updates);
         } else {
             editorEngine.style.update('position', value);
             editorEngine.history.commitTransaction();
@@ -216,10 +236,28 @@ const PositionInput = observer(({ compoundStyle }: { compoundStyle: CompoundStyl
             editorEngine.style.selectedStyle?.styles || {},
         );
 
-        if (currentPosition !== 'absolute') {
+        if (currentPosition !== 'absolute' && currentPosition !== 'sticky') {
             return null;
         }
 
+        // For sticky position, only show a simple "Top" input
+        if (currentPosition === 'sticky') {
+            const topStyle = elementStyles.find((style) => style.key.toLowerCase() === 'top');
+            if (!topStyle) {
+                return null;
+            }
+
+            return (
+                <div className="flex flex-row items-center justify-between w-full mt-2">
+                    <p className="text-xs text-foreground-onlook">Top</p>
+                    <div className="w-32">
+                        <NumberUnitInput elementStyle={topStyle} />
+                    </div>
+                </div>
+            );
+        }
+
+        // For absolute position, show the full position editor
         const positionStyles = {
             top: 'top-0 left-1/2 -translate-x-1/2',
             bottom: 'bottom-0 left-1/2 -translate-x-1/2',
@@ -267,6 +305,9 @@ const PositionInput = observer(({ compoundStyle }: { compoundStyle: CompoundStyl
                     left: selectedStyle.styles['left'] !== 'auto',
                     right: selectedStyle.styles['right'] !== 'auto',
                 });
+            } else if (position === 'sticky') {
+                // For sticky position, we don't need to update the lines state
+                // as we're showing a simple input instead of the position editor
             }
         };
 
