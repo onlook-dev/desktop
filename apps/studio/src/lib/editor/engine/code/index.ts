@@ -104,7 +104,7 @@ export class CodeManager {
                 await this.writeStyle(action);
                 break;
             case 'insert-element':
-                await this.writeInsert(action);
+                // await this.writeInsert(action);
                 break;
             case 'move-element':
                 await this.writeMove(action);

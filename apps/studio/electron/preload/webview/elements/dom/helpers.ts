@@ -25,7 +25,7 @@ export function getActionElement(el: HTMLElement): ActionElement | null {
         {} as Record<string, string>,
     );
 
-    const oid = getInstanceId(el) || getOid(el) || null;
+    const oid = '123'; //getInstanceId(el) || getOid(el) || null;
     if (!oid) {
         console.warn('Element has no oid');
         return null;
@@ -40,7 +40,7 @@ export function getActionElement(el: HTMLElement): ActionElement | null {
             .filter(Boolean) as ActionElement[],
         attributes,
         textContent: getImmediateTextContent(el) || null,
-        styles: {},
+        styles: getComputedStyle(el),
     };
 }
 

@@ -171,7 +171,7 @@ const StyleSections = memo(() => {
             <AccordionTrigger className="mb-[-4px] mt-[-2px]">
                 <AccordionHeader groupKey={groupKey as StyleGroupKey} />
             </AccordionTrigger>
-            <AccordionContent className="mt-2px">
+            <AccordionContent className="mt-[2px]">
                 {groupKey === StyleGroupKey.Text && <TagDetails />}
                 <StyleGroupComponent baseElementStyles={baseElementStyles} />
             </AccordionContent>
