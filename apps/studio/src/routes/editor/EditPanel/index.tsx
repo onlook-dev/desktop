@@ -235,6 +235,10 @@ export const EditPanel = observer(() => {
                             'rounded-tl-xl transition-width duration-300 opacity-100 bg-background/95 overflow-hidden h-full',
                             editorEngine.mode === EditorMode.PREVIEW ? 'hidden' : 'visible',
                         )}
+                        style={{
+                            pointerEvents:
+                                editorEngine.mode === EditorMode.PREVIEW ? 'none' : 'auto',
+                        }}
                     >
                         <div
                             className={cn(
@@ -261,6 +265,9 @@ export const EditPanel = observer(() => {
                         editorEngine.mode === EditorMode.PREVIEW ? 'hidden' : 'visible',
                         !isDevPanelOpen && 'rounded-tl-xl',
                     )}
+                    style={{
+                        pointerEvents: editorEngine.mode === EditorMode.PREVIEW ? 'none' : 'auto',
+                    }}
                 >
                     <div
                         className={cn(
