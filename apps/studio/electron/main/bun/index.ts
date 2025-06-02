@@ -10,6 +10,7 @@ import path from 'path';
 import { promisify } from 'util';
 import { __dirname } from '../index';
 import { PersistentStorage } from '../storage';
+import { getShellCommand, isWSL, detectUserShell } from '../utils/platform';
 import { replaceCommand } from './parse';
 
 const execAsync = promisify(exec);
@@ -32,9 +33,20 @@ export async function runBunCommand(
 ): Promise<RunBunCommandResult> {
     try {
         const commandToExecute = getBunCommand(command);
-        const shell = process.platform === 'win32' ? 'powershell.exe' : '/bin/sh';
 
-        console.log('Executing command: ', commandToExecute, options.cwd);
+        // Get user's shell preference from settings
+        const userSettings = PersistentStorage.USER_SETTINGS.read();
+        const userShellPreference = userSettings?.editor?.shellType;
+
+        // Use the shared shell detection function with user preference
+        const shell = getShellCommand(userShellPreference);
+        const detectedShell = detectUserShell();
+
+        console.log(`Executing command: ${commandToExecute}`);
+        console.log(
+            `  Shell: ${shell}, WSL: ${isWSL()}, User Preference: ${userShellPreference || 'auto-detect'}, Detected: ${detectedShell}`,
+            options.cwd,
+        );
         const { stdout, stderr } = await execAsync(commandToExecute, {
             cwd: options.cwd,
             maxBuffer: 1024 * 1024 * 10,

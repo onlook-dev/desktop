@@ -4,6 +4,8 @@ import * as pty from 'node-pty';
 import os from 'os';
 import { mainWindow } from '..';
 import { getBunCommand } from '../bun';
+import { getShellCommand, isWSL, getLineEnding, detectUserShell } from '../utils/platform';
+import { PersistentStorage } from '../storage';
 
 class TerminalManager {
     private static instance: TerminalManager;
@@ -24,7 +26,20 @@ class TerminalManager {
 
     create(id: string, options?: { cwd?: string }): boolean {
         try {
-            const shell = os.platform() === 'win32' ? 'powershell.exe' : '/bin/sh';
+            // Get user's shell preference from settings
+            const userSettings = PersistentStorage.USER_SETTINGS.read();
+            const userShellPreference = userSettings?.editor?.shellType;
+
+            // Use the shell detection function with user preference
+            const shell = getShellCommand(userShellPreference);
+            const detectedShell = detectUserShell();
+            console.log(`Creating terminal with shell: ${shell}`);
+            console.log(`  Platform: ${os.platform()}`);
+            console.log(`  WSL: ${isWSL()}`);
+            console.log(`  User Preference: ${userShellPreference || 'auto-detect'}`);
+            console.log(`  Detected User Shell: ${detectedShell}`);
+            console.log(`  Final Shell: ${shell}`);
+
             const ptyProcess = pty.spawn(shell, [], {
                 name: 'xterm-color',
                 cwd: options?.cwd,
@@ -176,7 +191,8 @@ class TerminalManager {
     executeCommand(id: string, command: string): boolean {
         try {
             const commandToExecute = getBunCommand(command);
-            const newline = os.platform() === 'win32' ? '\r\n' : '\n';
+            // Use platform-aware line ending that considers WSL
+            const newline = getLineEnding();
             return this.write(id, commandToExecute + newline);
         } catch (error) {
             console.error('Failed to execute command.', error);
