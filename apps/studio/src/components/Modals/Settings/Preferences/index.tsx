@@ -1,7 +1,14 @@
 import { useUserManager } from '@/components/Context';
 import { useTheme } from '@/components/ThemeProvider';
 import { invokeMainChannel } from '@/lib/utils';
-import { Language, LANGUAGE_DISPLAY_NAMES, MainChannels, Theme } from '@onlook/models/constants';
+import {
+    Language,
+    LANGUAGE_DISPLAY_NAMES,
+    MainChannels,
+    Theme,
+    ShellType,
+    SHELL_TYPE_DISPLAY_NAMES,
+} from '@onlook/models/constants';
 import { DEFAULT_IDE } from '@onlook/models/ide';
 import { Button } from '@onlook/ui/button';
 import {
@@ -23,6 +30,7 @@ const PreferencesTab = observer(() => {
     const ide = IDE.fromType(userManager.settings.settings?.editor?.ideType || DEFAULT_IDE);
     const isAnalyticsEnabled = userManager.settings.settings?.enableAnalytics || false;
     const shouldWarnDelete = userManager.settings.settings?.editor?.shouldWarnDelete ?? true;
+    const shellType = userManager.settings.settings?.editor?.shellType || ShellType.AUTO_DETECT;
     const IDEIcon = Icons[ide.icon];
 
     function updateIde(ide: IDE) {
@@ -36,6 +44,10 @@ const PreferencesTab = observer(() => {
 
     function updateDeleteWarning(enabled: boolean) {
         userManager.settings.updateEditor({ shouldWarnDelete: enabled });
+    }
+
+    function updateShellType(newShellType: ShellType) {
+        userManager.settings.updateEditor({ shellType: newShellType });
     }
 
     return (
@@ -139,6 +151,33 @@ const PreferencesTab = observer(() => {
                                 </DropdownMenuItem>
                             );
                         })}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+            <div className="flex justify-between items-center">
+                <div className="flex flex-col gap-2">
+                    <p className="text-largePlus">Terminal Shell</p>
+                    <p className="text-foreground-onlook text-small">
+                        Choose the shell to use for terminal operations
+                    </p>
+                </div>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="text-smallPlus min-w-[150px]">
+                            {SHELL_TYPE_DISPLAY_NAMES[shellType]}
+                            <Icons.ChevronDown className="ml-auto" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="min-w-[150px]">
+                        {Object.entries(SHELL_TYPE_DISPLAY_NAMES).map(([type, displayName]) => (
+                            <DropdownMenuItem
+                                key={type}
+                                onClick={() => updateShellType(type as ShellType)}
+                            >
+                                <span>{displayName}</span>
+                                {shellType === type && <Icons.CheckCircled className="ml-auto" />}
+                            </DropdownMenuItem>
+                        ))}
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>

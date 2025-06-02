@@ -1,4 +1,5 @@
 import { DEFAULT_IDE } from '../ide/index.ts';
+import { ShellType } from './terminal';
 
 export const APP_NAME = 'Onlook';
 export const APP_SCHEMA = 'onlook';
@@ -86,6 +87,7 @@ export const DefaultSettings = {
         ideType: DEFAULT_IDE,
         enableBunReplace: true,
         buildFlags: '--no-lint',
+        shellType: ShellType.AUTO_DETECT,
     },
 };
 
