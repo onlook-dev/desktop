@@ -14,7 +14,7 @@ export const AppBar = observer(() => {
     return (
         <div
             className={cn(
-                'flex flex-row items-center pl-20 h-10 border-b bg-blue-800 dark:bg-blue-800 dark:text-blue-300 text-blue-300 transition-colors duration-300 ease-in-out',
+                'flex flex-row items-center pl-20 h-10 border-b bg-blue-600 dark:bg-blue-800 dark:text-blue-300 text-blue-400 transition-colors duration-300 ease-in-out',
                 routeManager.route === Route.SIGN_IN && 'bg-transparent border-b-0',
                 updateManager.updateAvailable &&
                     'bg-red-950 dark:bg-red-950 dark:text-red-300 text-red-300 transition-opacity duration-300 ease-in-out',

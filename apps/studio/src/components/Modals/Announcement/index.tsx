@@ -42,15 +42,15 @@ export const AnnouncementModal = observer(() => {
                             <p className="text-sm text-foreground-secondary">
                                 {"It's faster, easier, and has more tools for designing in code."}
                             </p>
-                            <div className="flex flex-col dark:bg-blue-800 bg-blue-900/20 border rounded-lg p-4 mt-5 gap-3">
-                                <h3 className="text-blue-100 text-medium">Get 1 Month Free</h3>
-                                <p className="text-blue-200 text-sm">
+                            <div className="flex flex-col dark:bg-blue-800 bg-blue-200 dark:border-blue-300 border rounded-lg p-4 mt-5 gap-3">
+                                <h3 className="dark:text-blue-100 text-medium">Get 1 Month Free</h3>
+                                <p className="dark:text-blue-200 text-sm">
                                     If you already have Onlook Pro, you get 1 free month on the Tier
                                     1 plan. Just sign up for Onlook Web using the same email.
                                 </p>
                                 <Button
                                     size="sm"
-                                    className="w-fit border-blue-200 border-[0.5px] bg-blue-600 rounded-[4px] text-white"
+                                    className="w-fit border-blue-200 border-[0.5px] bg-blue-600 rounded-[4px] hover:bg-blue-700 text-white"
                                     onClick={() => window.open('https://onlook.com', '_blank')}
                                 >
                                     Start designing in Onlook Web
