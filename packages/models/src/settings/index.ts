@@ -1,5 +1,6 @@
 import { IdeType } from '../ide';
 import { type Project } from '../projects';
+import { ShellType } from '../constants/terminal';
 
 export interface UserSettings {
     id?: string;
@@ -15,6 +16,7 @@ export interface EditorSettings {
     enableBunReplace?: boolean;
     buildFlags?: string;
     newProjectPath?: string;
+    shellType?: ShellType;
 }
 
 export interface ChatSettings {
